@@ -13,37 +13,36 @@ jenkinsWaitTillJobFinished() {
     local pwd=${3}
     echo "Queue URL: ${queue_url}"
     local curl_res=$(curl -s -u "${user}":"${pwd}" "${queue_url}")
-    local job_url=$(echo "${curl_res}" | jq ".executable.url")
+    local job_url=$(echo -E "${curl_res}" | jq ".executable.url")
     local cancelled=false
 
     while [ -z "${job_url}" ] || [ "${job_url}" = "null" ] && [ ${cancelled} = false ]; do
         echo "Waiting for job to start, sleeping ${JENKINS_POLLING_TIME_SECONDS} seconds..."
         sleep ${JENKINS_POLLING_TIME_SECONDS}s
-        curl_res=$(curl -s -u "${user}":"${pwd}" "${queue_url}")
-        job_url=$(echo "${curl_res}" | jq ".executable.url" | sed 's/"//g')
-        cancelled=$(echo "${curl_res}" | jq ".cancelled")
+        curl_res=$(curl -s -u "${user}":"${pwd}" "${queue_url}" | tr -d  "\n\r")
+        job_url=$(echo -E "${curl_res}" | jq ".executable.url" | sed 's/"//g')
+        cancelled=$(echo -E "${curl_res}" | jq ".cancelled")
         # TODO HANDLE CANCELLED
     done
     local job=${job_url}
     local job_url="${job_url}api/json"
-    echo "job_url: ${job_url}"
-    local job_curl=$(curl -s -u "${user}":"${pwd}" "${job_url}")
-    echo "curl: ${job_curl}"
-    local result=$(echo "${job_curl}" | jq ".result")
+    local job_curl=$(curl -s -u "${user}":"${pwd}" "${job_url}" | tr -d  "\n\r")
+    local result=$(echo -E "${job_curl}" | jq ".result")
     while [ -z "${result}" ] || [ "${result}" = "null" ]; do
         echo "Waiting for job to finish..."
         sleep ${JENKINS_POLLING_TIME_SECONDS}s
-        job_curl=$(curl -s -u "${user}":"${pwd}" "${job_url}")
-        result=$(echo "${job_curl}" | jq ".result")
-        echo "Result: ${result}"
+        job_curl=$(curl -s -u "${user}":"${pwd}" "${job_url}" | tr -d  "\n\r")
+        result=$(echo -E "${job_curl}" | jq ".result")
     done
     echo "DONE! Result= ${result}"
 
     notify-send "Jenkins job with ${result}" "${job}console"
+    exit 0
 }
 
 jenkinsWaitTillJobFinishedInBackground() {
-    jenkinsWaitTillJobFinished "${1}" "${2}" "${3}">/dev/null 2>&1 &
+    local date_time=$(date '+%Y-%m-%d_%H_%M_%S')
+    jenkinsWaitTillJobFinished "${1}" "${2}" "${3}">"$HOME/debug_jenkins_${date_time}.log" 2>&1 &
 }
 
 #
