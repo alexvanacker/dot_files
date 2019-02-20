@@ -16,14 +16,21 @@ jenkinsWaitTillJobFinished() {
     local job_url=$(echo -E "${curl_res}" | jq ".executable.url")
     local cancelled=false
 
-    while [ -z "${job_url}" ] || [ "${job_url}" = "null" ] && [ ${cancelled} = false ]; do
+    while ([ -z "${job_url}" ] || [ "${job_url}" = "null" ]) && [ -z ${cancelled} ] ; do
         echo "Waiting for job to start, sleeping ${JENKINS_POLLING_TIME_SECONDS} seconds..."
         sleep ${JENKINS_POLLING_TIME_SECONDS}s
         curl_res=$(curl -s -u "${user}":"${pwd}" "${queue_url}" | tr -d  "\n\r")
         job_url=$(echo -E "${curl_res}" | jq ".executable.url" | sed 's/"//g')
         cancelled=$(echo -E "${curl_res}" | jq ".cancelled")
         # TODO HANDLE CANCELLED
+        echo "Cancelled = ${cancelled}"
     done
+
+    if [[ ${cancelled} = true ]]; then
+        notify-send "Jenkins job cancelled!"
+        exit 0
+    fi
+    echo "Job started"
     local job=${job_url}
     local job_url="${job_url}api/json"
     local job_curl=$(curl -s -u "${user}":"${pwd}" "${job_url}" | tr -d  "\n\r")
