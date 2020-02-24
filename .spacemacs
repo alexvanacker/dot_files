@@ -55,6 +55,7 @@ values."
      org
      (org :variables
           org-enable-reveal-js-support t)
+     deft
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -331,15 +332,25 @@ you should place your code here."
   ;; Fix M-RET not being a shortcut in org-mode
   ;; cf. https://github.com/syl20bnr/spacemacs/issues/9603
   (org-defkey org-mode-map [(meta return)] 'org-meta-return)
-  (setq org-journal-dir "~/org/journal/")
+  (setq org-journal-dir "~/Dropbox/notes/journal/")
   (setq org-journal-date-format "%A, %d %B %Y")
   (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+        '(("t" "Todo" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
            "* TODO %?\n  %i\n  %a")
-          ("j" "Journal" entry (file+datetree "~/org/journal.org")
+          ("j" "Journal" entry (file+datetree "~/Dropbox/notes/journal.org")
            "* %?\nEntered on %U\n  %i\n  %a")
-          ("a" "Achievement" entry (file+datetree "~/org/journal.org")
+          ("a" "Achievement" entry (file+datetree "~/Dropbox/notes/journal.org")
            "* %?  :achievement:\nEntered on %U\n %i\n %a)")))
+  ;; Deft
+  (spacemacs/set-leader-keys "od" 'deft)
+  (setq deft-directory "~/Dropbox/notes/")
+  (setq deft-recursive t)
+  (setq deft-default-extension "org")
+  (setq deft-text-mode 'org-mode)
+  (setq deft-use-filename-as-title t)
+  (setq deft-use-filter-string-for-filename t)
+  ;; Open magit by default when switching projects
+  (setq projectile-switch-project-action 'projectile-vc)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -349,10 +360,12 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/org/gtd.org")))
+ '(org-agenda-files
+   (quote
+    ("~/Dropbox/notes/2020-02-24T1053-watchman-cs-passover.org")))
  '(package-selected-packages
    (quote
-    (org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc plantuml-mode ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc plantuml-mode ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(python-shell-interpreter "python3" t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
