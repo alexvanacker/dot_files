@@ -34,10 +34,13 @@ values."
      html
      asciidoc
      python
+     (python :variables
+             python-backend 'anaconda)
      yaml
      javascript
      sql
      clojure
+     react
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -56,6 +59,7 @@ values."
      (org :variables
           org-enable-reveal-js-support t)
      deft
+     org-roam
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -344,7 +348,16 @@ you should place your code here."
           ("j" "Journal" entry (file+datetree "~/Dropbox/notes/journal.org")
            "* %?\nEntered on %U\n  %i\n  %a")
           ("a" "Achievement" entry (file+datetree "~/Dropbox/notes/journal.org")
-           "* %?  :achievement:\nEntered on %U\n %i\n %a)")))
+           "* %?  :achievement:\nEntered on %U\n %i\n %a")
+          ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
+           "* %U Meeting - %?\n")
+          ("n" "Note" entry (file "~/Dropbox/notes/inbox.org")
+           "* %U %^{Note}\n")))
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 9)))
+  (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+  (setq org-refile-use-outline-path 'file)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
   ;; Deft
   (spacemacs/set-leader-keys "od" 'deft)
   (spacemacs/set-leader-keys "pA" 'projectile-ag)
@@ -356,6 +369,8 @@ you should place your code here."
   (setq deft-use-filter-string-for-filename t)
   ;; Open magit by default when switching projects
   (setq projectile-switch-project-action 'projectile-vc)
+  ;; Shortcuts
+  (spacemacs/set-leader-keys "oi" (lambda () (interactive) (find-file "~/Dropbox/notes/inbox.org")))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -367,7 +382,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
    (quote
-    ("~/Dropbox/notes/gtd.org" "~/Dropbox/notes/2020-02-24T1053-watchman-cs-passover.org")))
+    ("~/Dropbox/notes/pricing-2020.org" "~/Dropbox/notes/agreegator.org" "~/Dropbox/notes/inbox.org" "~/Dropbox/notes/journal.org" "~/Dropbox/notes/2020-03-03T2153.org" "~/Dropbox/notes/2020-03-03T1556.org" "~/Dropbox/notes/gtd.org" "~/Dropbox/notes/2020-02-24T1053-watchman-cs-passover.org")))
  '(package-selected-packages
    (quote
     (org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc plantuml-mode ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
