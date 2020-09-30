@@ -57,6 +57,7 @@ values."
              python-backend 'anaconda)
      yaml
      javascript
+     shell-scripts
      sql
      clojure
      react
@@ -65,7 +66,7 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     ;; syntax-checking
+     syntax-checking
      ;; version-control
      )
    ;; List of additional packages that will be installed without being
