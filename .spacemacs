@@ -356,7 +356,7 @@ you should place your code here."
           ("a" "Achievement" entry (file+datetree "~/Dropbox/notes/journal.org")
            "* %?  :achievement:\nEntered on %U\n %i\n %a")
           ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
-           "* %U Meeting - %?\n")
+           "* %U Meeting - %?\n" :clock-in t :clock-keep t)
           ("n" "Note" entry (file "~/Dropbox/notes/inbox.org")
            "* %U %^{Note}\n")))
   (setq org-refile-targets '((nil :maxlevel . 9)
