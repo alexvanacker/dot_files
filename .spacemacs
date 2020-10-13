@@ -51,7 +51,7 @@ This function should only modify configuration layer settings."
      (org :variables
           org-enable-reveal-js-support t)
      deft
-     org-roam
+     google-calendar
      html
      asciidoc
      python
@@ -527,6 +527,8 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (with-eval-after-load 'cider
     (setq cider-repl-pop-to-buffer-on-connect t))
+  ;; handle encrypted values
+  (load-library "~/secrets.el.gpg")
   (use-package forge
     :after magit)
   ;; Fix M-RET not being a shortcut in org-mode
@@ -534,6 +536,12 @@ you should place your code here."
   (with-eval-after-load 'org
     (org-defkey org-mode-map [(meta return)] 'org-meta-return)
     )
+  ;; org-agenda
+  (setq org-agenda-custom-commands
+        '(("A" "Agenda and tasks"
+           ((agenda "")
+            (todo "TODO"
+                  )))))
   (setq org-todo-keywords
         '((sequence "IDEA" "TODO" "WAITING" "DONE")))
   (setq org-journal-dir "~/Dropbox/notes/journal/")
@@ -567,14 +575,21 @@ you should place your code here."
   (setq deft-text-mode 'org-mode)
   (setq deft-use-filename-as-title nil)
   (setq deft-use-filter-string-for-filename t)
+  ;; Org-roam
+  (setq org-roam-directory "~/Dropbox/notes")
   ;; Open magit by default when switching projects
   (setq projectile-switch-project-action 'projectile-vc)
+  ;; Spotify -- some in secrets.el.gpg
+  (setq spotify-transport 'connect)
   ;; Shortcuts
   (spacemacs/set-leader-keys "oi" (lambda () (interactive) (find-file "~/Dropbox/notes/inbox.org")))
   ;; Plantuml
   (setq org-plantuml-jar-path (expand-file-name "/home/alexvanacker/devenv/plantuml.jar"))
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+  ;; org-gcal -- some in secrets.el
+  (setq org-gcal-fetch-file-alist
+        '(("alexis.vanacker@concordnow.com" .  "~/Dropbox/notes/gcal.org")))
   ;; Issue with org-indent-timer see https://github.com/seagle0128/.emacs.d/issues/129
   (org-reload)
   )
@@ -589,9 +604,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("~/Dropbox/notes/googlecalendar.org" "~/Dropbox/notes/2020-09-25T1708.org" "~/Dropbox/notes/memory-leak.org" "~/Dropbox/notes/inbox.org" "~/Dropbox/notes/pricing-2020.org" "~/Dropbox/notes/agreegator.org" "~/Dropbox/notes/journal.org" "~/Dropbox/notes/2020-03-03T2153.org" "~/Dropbox/notes/2020-03-03T1556.org" "~/Dropbox/notes/gtd.org" "~/Dropbox/notes/2020-02-24T1053-watchman-cs-passover.org"))
+   '("~/Dropbox/notes/bcm.org" "~/Dropbox/notes/2020-10-06T1715.org" "~/Dropbox/notes/gcal.org" "~/Dropbox/notes/2020-09-25T1708.org" "~/Dropbox/notes/memory-leak.org" "~/Dropbox/notes/inbox.org" "~/Dropbox/notes/pricing-2020.org" "~/Dropbox/notes/agreegator.org" "~/Dropbox/notes/journal.org" "~/Dropbox/notes/2020-03-03T2153.org" "~/Dropbox/notes/2020-03-03T1556.org" "~/Dropbox/notes/gtd.org"))
  '(package-selected-packages
-   '(flycheck-rust flycheck-pos-tip flycheck insert-shebang fish-mode company-shell terraform-mode hcl-mode ansible-doc ansible strace-mode org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
+   '(company-emacs-eclim eclim ox-gfm persist request-deferred deferred calfw org-gcal flycheck-rust flycheck-pos-tip flycheck insert-shebang fish-mode company-shell terraform-mode hcl-mode ansible-doc ansible strace-mode org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
  '(python-shell-interpreter "python3"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
