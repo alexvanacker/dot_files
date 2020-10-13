@@ -49,7 +49,8 @@ This function should only modify configuration layer settings."
      markdown
      org
      (org :variables
-          org-enable-reveal-js-support t)
+          org-enable-reveal-js-support t
+          org-enable-github-support t)
      deft
      google-calendar
      html
