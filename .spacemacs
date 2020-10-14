@@ -85,12 +85,6 @@ This function should only modify configuration layer settings."
                                       ag
                                       forge
                                       yasnippet-snippets
-                                      simple-httpd
-                                      oauth2
-                                      (spotify
-                                       :location (recipe
-                                                  :fetcher github
-                                                  :repo "danielfm/spotify.el"))
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -584,13 +578,6 @@ you should place your code here."
   (setq org-roam-directory "~/Dropbox/notes")
   ;; Open magit by default when switching projects
   (setq projectile-switch-project-action 'projectile-vc)
-  ;; Spotify -- some in secrets.el.gpg
-  (setq spotify-transport 'connect)
-  (global-set-key (kbd "C-c ;") 'spotify-command-map)
-  (setq spotify-player-status-playing-text "▶")
-  (setq spotify-player-status-paused-text "⏸")
-  (setq spotify-player-status-stopped-text "■")
-  (setq spotify-player-status-format "[%p: %a - %t - %r%s]")
   ;; Shortcuts
   (spacemacs/set-leader-keys "oi" (lambda () (interactive) (find-file "~/Dropbox/notes/inbox.org")))
   ;; Plantuml
