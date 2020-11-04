@@ -535,9 +535,14 @@ you should place your code here."
     (org-defkey org-mode-map [(meta return)] 'org-meta-return)
     )
   ;; org-agenda
+  (spacemacs/set-leader-keys "cr" (lambda () (interactive (find-file "~/Dropbox/notes/clockreport.org"))))
   (setq org-agenda-custom-commands
         '(("A" "Agenda and tasks"
            ((agenda "")
+            (todo "TODO"
+                  )))
+          ("D" "Day agenda and tasks"
+           ((agenda "" ((org-agenda-span 1)))
             (todo "TODO"
                   )))))
   (setq org-todo-keywords
@@ -550,9 +555,11 @@ you should place your code here."
           ("i" "Idea" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
            "* IDEA %?\n %i\n %a")
           ("j" "Journal" entry (file+datetree "~/Dropbox/notes/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a")
-          ("J" "Journal + ClockIn" entry (file+datetree "~/Dropbox/notes/journal.org")
-           "* %?\nEntered on %U\n  %i\n" :clock-in t :clock-keep t)
+           "* %?\nEntered on %U\n  %i\n  %a" :clock-in t :clock-keep t)
+          ("R" "Reviews" entry (file+datetree "~/Dropbox/notes/journal.org")
+           "* Reviews :reviews:\nEntered on %U\n" :clock-in t :clock-keep t)
+          ("D" "Daily Review / Standup" entry (file+datetree "~/Dropbox/notes/journal.org")
+           "* Daily Review / Standup :team:\nEntered on %U\n" :clock-in t :clock-keep t)
           ("a" "Achievement" entry (file+datetree "~/Dropbox/notes/journal.org")
            "* %?  :achievement:\nEntered on %U\n %i\n %a")
           ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
@@ -590,6 +597,8 @@ you should place your code here."
         '(("alexis.vanacker@concordnow.com" .  "~/Dropbox/notes/gcal.org")))
   ;; Issue with org-indent-timer see https://github.com/seagle0128/.emacs.d/issues/129
   (org-reload)
+  ;; Fetch Google Calendar events at startup
+  (org-gcal-fetch)
   )
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
