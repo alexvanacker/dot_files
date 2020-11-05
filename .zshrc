@@ -75,19 +75,13 @@ ZSH_THEME="agnoster"
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=$HOME/.zsh_custom
 
-# Install notify and command-time custom plugins
-export CUSTOM_NOTIFY_PATH=$ZSH_CUSTOM/plugins/notify
-if [[ ! -d $CUSTOM_NOTIFY_PATH ]];
-then
-    echo "ZSH: Installing notify plugin..."
-    git clone git@github.com:marzocchi/zsh-notify.git $CUSTOM_NOTIFY_PATH
-fi
+# Install command-time custom plugins
 
 export CUSTOM_COMMAND_TIME_PATH=$ZSH_CUSTOM/plugins/command-time
 if [[ ! -d $CUSTOM_COMMAND_TIME_PATH ]];
 then
     echo "ZSH: Installing command-time plugin..."
-    git clone https://github.com/popstas/zsh-command-time.git $CUSTOM_COMMAND_TIME_PATH
+    git clone git@github.com:popstas/zsh-command-time.git $CUSTOM_COMMAND_TIME_PATH
 fi
 
 
@@ -96,7 +90,7 @@ fi
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git notify rust cargo command-time
+  git rust cargo command-time
 )
 
 source $ZSH/oh-my-zsh.sh
