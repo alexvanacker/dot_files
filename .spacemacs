@@ -596,6 +596,7 @@ you should place your code here."
   (setq org-gcal-fetch-file-alist
         '(("alexis.vanacker@concordnow.com" .  "~/Dropbox/notes/gcal.org")))
   ;; Issue with org-indent-timer see https://github.com/seagle0128/.emacs.d/issues/129
+  (setq org-gcal-remove-api-cancelled-events t)
   (org-reload)
   ;; Fetch Google Calendar events at startup
   (org-gcal-fetch)
