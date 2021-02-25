@@ -129,7 +129,7 @@ export DEFAULT_USER=alexvanacker
 prompt context(){}
 
 # Use better colors
-eval `dircolors ~/.dir_colors/dircolors`
+eval `dircolors ~/.dircolors/dircolors.256dark`
 
 
 export NVM_DIR="$HOME/.nvm"
