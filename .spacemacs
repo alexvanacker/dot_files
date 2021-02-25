@@ -38,25 +38,37 @@ This function should only modify configuration layer settings."
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
      ;; `M-m f e R' (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     helm
-     auto-completion
+     ;; auto-completion
      ;; better-defaults
-     docker
      emacs-lisp
+     ;; git
+     helm
+     ;; lsp
+     ;; markdown
+     multiple-cursors
+     ;; org
+     ;; (shell :variables
+     ;;        shell-default-height 30
+     ;;        shell-default-position 'bottom)
+     ;; spell-checking
+     ;; syntax-checking
+     ;; version-control
+     treemacs
+     auto-completion
+     docker
      git
      rust
      restclient
      markdown
-     org
      (org :variables
           org-enable-reveal-js-support t
           org-enable-github-support t
           )
      deft
+     csv
      google-calendar
      html
      asciidoc
-     python
      (python :variables
              python-backend 'anaconda)
      yaml
@@ -66,24 +78,24 @@ This function should only modify configuration layer settings."
      clojure
      react
      terraform
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
-     ;; spell-checking
+     (plantuml :variables
+               plantuml-jar-path "~/devenv/plantuml.jar"
+               org-plantuml-jar-path "~devenv//plantUml.jar")
      syntax-checking
-     ;; version-control
      treemacs)
 
 
-   ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
-   ;; packages, then consider creating a layer. You can also put the
-   ;; configuration in `dotspacemacs/user-config'.
-   ;; To use a local version of a package, use the `:location' property:
-   ;; '(your-package :location "~/path/to/your-package/")
+   ;; List of additional packages that will be installed without being wrapped
+   ;; in a layer (generally the packages are installed only and should still be
+   ;; loaded using load/require/use-package in the user-config section below in
+   ;; this file). If you need some configuration for these packages, then
+   ;; consider creating a layer. You can also put the configuration in
+   ;; `dotspacemacs/user-config'. To use a local version of a package, use the
+   ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages '(
                                       ag
+                                      editorconfig
                                       forge
                                       yasnippet-snippets
                                       )
@@ -200,9 +212,13 @@ It should only modify the values of Spacemacs settings."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; `recents' `recents-by-project' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
+   ;; The exceptional case is `recents-by-project', where list-type must be a
+   ;; pair of numbers, e.g. `(recents-by-project . (7 .  5))', where the first
+   ;; number is the project limit and the second the limit on the recent files
+   ;; within a project.
    dotspacemacs-startup-lists '((recents . 5)
                                 (projects . 7))
 
@@ -216,6 +232,14 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
+
+   ;; If non-nil, *scratch* buffer will be persistent. Things you write down in
+   ;; *scratch* buffer will be saved and restored automatically.
+   dotspacemacs-scratch-buffer-persistent nil
+
+   ;; If non-nil, `kill-buffer' on *scratch* buffer
+   ;; will bury it instead of killing.
+   dotspacemacs-scratch-buffer-unkillable nil
 
    ;; Initial message in the scratch buffer, such as "Welcome to Spacemacs!"
    ;; (default nil)
@@ -240,7 +264,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
-   ;; Default font or prioritized list of fonts.
+   ;; Default font or prioritized list of fonts. The `:size' can be specified as
+   ;; a non-negative integer (pixel size), or a floating-point (point size).
+   ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Source Code Pro"
                                :size 15
                                :weight normal
@@ -398,7 +424,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-line-numbers nil
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
@@ -459,6 +485,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
 
+   ;; Show trailing whitespace (default t)
+   dotspacemacs-show-trailing-whitespace t
+
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
@@ -491,7 +520,10 @@ It should only modify the values of Spacemacs settings."
 
    ;; If nil the home buffer shows the full path of agenda items
    ;; and todos. If non nil only the file name is shown.
-   dotspacemacs-home-shorten-agenda-source nil))
+   dotspacemacs-home-shorten-agenda-source nil
+
+   ;; If non-nil then byte-compile some of Spacemacs files.
+   dotspacemacs-byte-compile nil))
 
 (defun dotspacemacs/user-env ()
   "Environment variables setup.
@@ -560,8 +592,6 @@ you should place your code here."
            "* Reviews :reviews:\nEntered on %U\n" :clock-in t :clock-keep t)
           ("D" "Daily Review / Standup" entry (file+datetree "~/Dropbox/notes/journal.org")
            "* Daily Review / Standup :team:\nEntered on %U\n" :clock-in t :clock-keep t)
-          ("a" "Achievement" entry (file+datetree "~/Dropbox/notes/journal.org")
-           "* %?  :achievement:\nEntered on %U\n %i\n %a")
           ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
            "* %U Meeting - %?\n" :clock-in t :clock-keep t)
           ("n" "Note" entry (file "~/Dropbox/notes/inbox.org")
@@ -571,6 +601,8 @@ you should place your code here."
   (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
   (setq org-refile-use-outline-path 'file)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-link-abbrev-alist
+        '(("concord-jira" . "https://contractlive.atlassian.net/browse/")))
   ;; Org clock
   (spacemacs/toggle-mode-line-org-clock-on)
   ;; Deft
@@ -589,16 +621,19 @@ you should place your code here."
   ;; Shortcuts
   (spacemacs/set-leader-keys "oi" (lambda () (interactive) (find-file "~/Dropbox/notes/inbox.org")))
   ;; Plantuml
-  (setq org-plantuml-jar-path (expand-file-name "/home/alexvanacker/devenv/plantuml.jar"))
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+  ;;(setq org-plantuml-jar-path (expand-file-name "/home/alexvanacker/devenv/plantuml.jar"))
+  ;;(add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  ;;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
   ;; org-gcal -- some in secrets.el
   (setq org-gcal-fetch-file-alist
         '(("alexis.vanacker@concordnow.com" .  "~/Dropbox/notes/gcal.org")))
   ;; Issue with org-indent-timer see https://github.com/seagle0128/.emacs.d/issues/129
   (setq org-gcal-remove-api-cancelled-events t)
   (org-reload)
-  ;; Fetch Google Calendar events at startup
+  ;; Python
+  (setq flycheck-python-pycompile-executable "python3")
+  ;; JS
+  (setq flycheck-eslint-rules-directories '("~/concord/git/concord-app-front/services/front/"))
   (org-gcal-fetch)
   )
 (defun dotspacemacs/emacs-custom-settings ()
@@ -611,10 +646,12 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(evil-want-Y-yank-to-eol nil)
  '(org-agenda-files
-   '("~/Dropbox/notes/bcm.org" "~/Dropbox/notes/2020-10-06T1715.org" "~/Dropbox/notes/gcal.org" "~/Dropbox/notes/2020-09-25T1708.org" "~/Dropbox/notes/memory-leak.org" "~/Dropbox/notes/inbox.org" "~/Dropbox/notes/pricing-2020.org" "~/Dropbox/notes/agreegator.org" "~/Dropbox/notes/journal.org" "~/Dropbox/notes/2020-03-03T2153.org" "~/Dropbox/notes/2020-03-03T1556.org" "~/Dropbox/notes/gtd.org"))
+   '("~/Dropbox/notes/2021-02-19T1625.org" "~/Dropbox/notes/task_blocks.org" "~/Dropbox/notes/spring_secu_oauth_upgrade.org" "~/Dropbox/notes/signer_panel_epic.org" "~/Dropbox/notes/iff_sso_preparation.org" "~/Dropbox/notes/bcm.org" "~/Dropbox/notes/2020-10-06T1715.org" "~/Dropbox/notes/gcal.org" "~/Dropbox/notes/2020-09-25T1708.org" "~/Dropbox/notes/memory-leak.org" "~/Dropbox/notes/inbox.org" "~/Dropbox/notes/pricing-2020.org" "~/Dropbox/notes/agreegator.org" "~/Dropbox/notes/journal.org" "~/Dropbox/notes/2020-03-03T2153.org" "~/Dropbox/notes/2020-03-03T1556.org" "~/Dropbox/notes/gtd.org"))
+ '(org-export-backends '(ascii html icalendar latex md odt org))
  '(package-selected-packages
-   '(ox-jira org-jira oauth2 spotify company-emacs-eclim eclim ox-gfm persist request-deferred deferred calfw org-gcal flycheck-rust flycheck-pos-tip flycheck insert-shebang fish-mode company-shell terraform-mode hcl-mode ansible-doc ansible strace-mode org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
+   '(plantuml-mode treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil treemacs cfrs ht posframe symbol-overlay sphinx-doc pipenv org-superstar org-re-reveal org-brain magit-section emr list-utils editorconfig package-lint window-purpose ctable all-the-icons csv-mode ox-jira org-jira oauth2 spotify company-emacs-eclim eclim ox-gfm persist request-deferred deferred calfw org-gcal flycheck-rust flycheck-pos-tip flycheck insert-shebang fish-mode company-shell terraform-mode hcl-mode ansible-doc ansible strace-mode org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
  '(python-shell-interpreter "python3"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
