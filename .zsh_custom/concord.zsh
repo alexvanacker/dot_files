@@ -3,13 +3,9 @@ run-front() {
 	cd ~/concord/git/concord-app-front
 	echo "Checking out origin/master...."
 	git fetch --all --prune
-	git checkout origin/master
+	git reset --hard  origin/master
 	echo "Running docker-compose..."
-	docker-compose up -d --build dev-proxy
-	echo "Running serve..."
-	cd ~/concord/git/concord-app-front/services/front/
-	npm ci
-	npm run serve
+	docker-compose up -d --build dev-proxy front
 }
 
 alias nego="cd ~/concord/Negotiation-App"
