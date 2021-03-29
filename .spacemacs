@@ -622,8 +622,6 @@ you should place your code here."
   (setq deft-text-mode 'org-mode)
   (setq deft-use-filename-as-title nil)
   (setq deft-use-filter-string-for-filename t)
-  ;; Org-roam
-  (setq org-roam-directory "~/Dropbox/notes")
   ;; Open magit by default when switching projects
   (setq projectile-switch-project-action 'projectile-vc)
   ;; Shortcuts
