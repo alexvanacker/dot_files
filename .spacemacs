@@ -80,7 +80,7 @@ This function should only modify configuration layer settings."
      terraform
      (plantuml :variables
                plantuml-jar-path "~/devenv/plantuml.jar"
-               org-plantuml-jar-path "~devenv//plantUml.jar")
+               org-plantuml-jar-path "~/devenv/plantuml.jar")
      syntax-checking
      treemacs)
 
@@ -621,10 +621,6 @@ you should place your code here."
   (setq projectile-switch-project-action 'projectile-vc)
   ;; Shortcuts
   (spacemacs/set-leader-keys "oi" (lambda () (interactive) (find-file "~/Dropbox/notes/inbox.org")))
-  ;; Plantuml
-  ;;(setq org-plantuml-jar-path (expand-file-name "/home/alexvanacker/devenv/plantuml.jar"))
-  ;;(add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-  ;;(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
   ;; org-gcal -- some in secrets.el
   (setq org-gcal-fetch-file-alist
         '(("alexis.vanacker@concordnow.com" .  "~/Dropbox/notes/gcal.org")))
