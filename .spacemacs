@@ -576,17 +576,18 @@ you should place your code here."
   ;; org-agenda
   (setq org-agenda-files (quote ("~/Dropbox/notes")))
   (spacemacs/set-leader-keys "cr" (lambda () (interactive (find-file "~/Dropbox/notes/clockreport.org"))))
+  (setq org-todo-keywords
+        '((sequence "IDEA" "TODO" "WAITING(/!)" "|" "DONE")))
+  (setq org-log-into-drawer t)
   (setq org-agenda-custom-commands
         '(("A" "Agenda and tasks"
            ((agenda "")
-            (todo "TODO"
+            (todo "WAITING|TODO"
                   )))
           ("D" "Day agenda and tasks"
            ((agenda "" ((org-agenda-span 1)))
-            (todo "TODO"
+            (todo "WAITING|TODO"
                   )))))
-  (setq org-todo-keywords
-        '((sequence "IDEA" "TODO" "WAITING" "DONE")))
   (setq org-journal-dir "~/Dropbox/notes/journal/")
   (setq org-journal-date-format "%A, %d %B %Y")
   (setq org-capture-templates
