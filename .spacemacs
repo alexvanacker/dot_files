@@ -449,7 +449,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -563,6 +563,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (require 'org-protocol)
+  (load "~/.emacs.d/custom.el")
   (with-eval-after-load 'cider
     (setq cider-repl-pop-to-buffer-on-connect t))
   ;; handle encrypted values
@@ -573,13 +575,30 @@ you should place your code here."
   ;; cf. https://github.com/syl20bnr/spacemacs/issues/9603
   (with-eval-after-load 'org
     (org-defkey org-mode-map [(meta return)] 'org-meta-return)
-    )
+    (add-to-list 'org-modules 'org-protocol)
+
+    (setq org-capture-templates
+          '(("t" "Todo" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
+             "* TODO  %?\n  %i\n ")
+            ("i" "Idea" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
+             "* IDEA %?\n %i\n %a")
+            ("j" "Journal" entry (file+olp+datetree "~/Dropbox/notes/journal.org")
+             "* %?\nEntered on %U\n  %i\n  %a" :clock-in t :clock-keep t)
+            ("D" "Daily Review / Standup" entry (file+olp+datetree "~/Dropbox/notes/journal.org")
+             "* Daily Review / Standup :team:\nEntered on %U\n" :clock-in t :clock-keep t)
+            ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
+             "* %U Meeting - %?\n" :clock-in t :clock-keep t)
+            ("n" "Note" entry (file "~/Dropbox/notes/inbox.org")
+             "* %U %^{Note}\n")
+            ("L" "Link from protocol" entry (file "~/Dropbox/notes/inbox.org")
+             "* TODO [[%:link][%:description]] \n%?\n" :clock-keep t :jump-to-captured t))))
   ;; org-agenda
   (setq org-agenda-files (quote ("~/Dropbox/notes")))
   (spacemacs/set-leader-keys "cr" (lambda () (interactive (find-file "~/Dropbox/notes/clockreport.org"))))
   (setq org-todo-keywords
         '((sequence "IDEA" "TODO" "WAITING(/!)" "|" "DONE")))
   (setq org-log-into-drawer t)
+  (setq org-clock-out-remove-zero-time-clocks t)
   (setq org-agenda-custom-commands
         '(("A" "Agenda and tasks"
            ((agenda "")
@@ -591,21 +610,6 @@ you should place your code here."
                   )))))
   (setq org-journal-dir "~/Dropbox/notes/journal/")
   (setq org-journal-date-format "%A, %d %B %Y")
-  (setq org-capture-templates
-        '(("t" "Todo" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
-           "* TODO %?\n  %i\n  %a")
-          ("i" "Idea" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
-           "* IDEA %?\n %i\n %a")
-          ("j" "Journal" entry (file+datetree "~/Dropbox/notes/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a" :clock-in t :clock-keep t)
-          ("R" "Reviews" entry (file+datetree "~/Dropbox/notes/journal.org")
-           "* Reviews :reviews:\nEntered on %U\n" :clock-in t :clock-keep t)
-          ("D" "Daily Review / Standup" entry (file+datetree "~/Dropbox/notes/journal.org")
-           "* Daily Review / Standup :team:\nEntered on %U\n" :clock-in t :clock-keep t)
-          ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
-           "* %U Meeting - %?\n" :clock-in t :clock-keep t)
-          ("n" "Note" entry (file "~/Dropbox/notes/inbox.org")
-           "* %U %^{Note}\n")))
   (setq org-refile-targets '((nil :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9)))
   (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
