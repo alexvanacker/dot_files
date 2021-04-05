@@ -619,6 +619,32 @@ you should place your code here."
         '(("concord-jira" . "https://contractlive.atlassian.net/browse/")))
   ;; Org clock
   (spacemacs/toggle-mode-line-org-clock-on)
+  ;; Blogging - export
+  (setq org-publish-project-alist
+        '(
+
+          ("org-alexvanacker"
+           ;; Path to your org files.
+           :base-directory "~/git/alexvanacker.github.io/org/"
+           :base-extension "org"
+
+           ;; Path to your Jekyll project.
+           :publishing-directory "~/git/alexvanacker.github.io/jekyll/"
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 4
+           :html-extension "html"
+           :body-only t ;; Only export section between <body> </body>
+           )
+
+          ("org-static-alexvanacker"
+           :base-directory "~/git/alexvanacker.github.io/org/"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
+           :publishing-directory "~/git/alexvanacker.github.io/"
+           :recursive t
+           :publishing-function org-publish-attachment)
+
+          ("alexvanacker" :components ("org-alexvanacker" "org-static-alexvanacker"))))
   ;; Deft
   (spacemacs/set-leader-keys "od" 'deft)
   (spacemacs/set-leader-keys "pA" 'projectile-ag)
