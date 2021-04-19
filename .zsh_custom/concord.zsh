@@ -5,7 +5,7 @@ run-front() {
 	git fetch --all --prune
 	git reset --hard  origin/master
 	echo "Running docker-compose..."
-	docker-compose up -d --build dev-proxy front
+  env $(<./env/github_credentials.env) docker-compose up --build dev-proxy front
 }
 
 alias nego="cd ~/concord/Negotiation-App"
