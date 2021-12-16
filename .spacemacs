@@ -32,7 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(go
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press `SPC f e R' (Vim style) or
@@ -43,7 +43,8 @@ This function should only modify configuration layer settings."
      emacs-lisp
      ;; git
      helm
-     ;; lsp
+     (lsp :variables
+          lsp-rust-server 'rust-analyzer)
      ;; markdown
      multiple-cursors
      ;; org
@@ -72,17 +73,21 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'anaconda)
      yaml
-     javascript
+     (javascript :variables
+                 js2-mode-show-strict-warnings nil)
      shell-scripts
      sql
      clojure
      react
      terraform
+     (java :variables java-backend 'lsp)
      (plantuml :variables
                plantuml-jar-path "~/devenv/plantuml.jar"
                org-plantuml-jar-path "~/devenv/plantuml.jar")
      syntax-checking
-     treemacs)
+     emberjs
+     treemacs
+     (ruby :variables ruby-backend 'lsp))
 
 
    ;; List of additional packages that will be installed without being wrapped
@@ -98,6 +103,7 @@ This function should only modify configuration layer settings."
                                       editorconfig
                                       forge
                                       yasnippet-snippets
+                                      code-review
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -147,7 +153,7 @@ It should only modify the values of Spacemacs settings."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https t
+   dotspacemacs-elpa-https nil
 
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
@@ -224,6 +230,12 @@ It should only modify the values of Spacemacs settings."
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
+
+   ;; Show numbers before the startup list lines. (default t)
+   dotspacemacs-show-startup-list-numbers t
+
+   ;; The minimum delay in seconds between number key presses. (default 0.4)
+   dotspacemacs-startup-buffer-multi-digit-delay 0.4
 
    ;; Default major mode for a new empty buffer. Possible values are mode
    ;; names such as `text-mode'; and `nil' to use Fundamental mode.
@@ -405,6 +417,10 @@ It should only modify the values of Spacemacs settings."
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
 
+   ;; Show the scroll bar while scrolling. The auto hide time can be configured
+   ;; by setting this variable to a number. (default t)
+   dotspacemacs-scroll-bar-while-scrolling t
+
    ;; Control line numbers activation.
    ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
    ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
@@ -429,7 +445,8 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
-   ;; If non-nil `smartparens-strict-mode' will be enabled in programming modes.
+   ;; If non-nil and `dotspacemacs-activate-smartparens-mode' is also non-nil,
+   ;; `smartparens-strict-mode' will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
 
@@ -510,6 +527,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-use-clean-aindent-mode t
 
+   ;; Accept SPC as y for prompts if non nil. (default nil)
+   dotspacemacs-use-SPC-as-y nil
+
    ;; If non-nil shift your number row to match the entered keyboard layout
    ;; (only in insert state). Currently supported keyboard layouts are:
    ;; `qwerty-us', `qwertz-de' and `querty-ca-fr'.
@@ -582,31 +602,32 @@ you should place your code here."
              "* TODO  %?\n  %i\n ")
             ("i" "Idea" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
              "* IDEA %?\n %i\n %a")
-            ("j" "Journal" entry (file+olp+datetree "~/Dropbox/notes/journal.org")
-             "* %?\nEntered on %U\n  %i\n  %a" :clock-in t :clock-keep t)
-            ("D" "Daily Review / Standup" entry (file+olp+datetree "~/Dropbox/notes/journal.org")
-             "* Daily Review / Standup :team:\nEntered on %U\n" :clock-in t :clock-keep t)
             ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
              "* %U Meeting - %?\n" :clock-in t :clock-keep t)
-            ("n" "Note" entry (file "~/Dropbox/notes/inbox.org")
-             "* %U %^{Note}\n")
+            ("a" "Note (Action)" entry (file "~/Dropbox/notes/inbox.org")
+             "* %U %?\n" :clock-in t :clock-keep t)
             ("L" "Link from protocol" entry (file "~/Dropbox/notes/inbox.org")
              "* TODO [[%:link][%:description]] \n%?\n" :clock-keep t :jump-to-captured t))))
   ;; org-agenda
   (setq org-agenda-files (quote ("~/Dropbox/notes")))
-  (spacemacs/set-leader-keys "cr" (lambda () (interactive (find-file "~/Dropbox/notes/clockreport.org"))))
+  (spacemacs/set-leader-keys "oc" (lambda () (interactive (find-file "~/Dropbox/notes/clockreport.org"))))
   (setq org-todo-keywords
-        '((sequence "IDEA" "TODO" "WAITING(/!)" "|" "DONE")))
+        '((sequence "IDEA" "TODO" "NEXT" "WAITING(/!)" "|" "DONE")))
   (setq org-log-into-drawer t)
   (setq org-clock-out-remove-zero-time-clocks t)
+  (setq org-agenda-prefix-format '((agenda . " %i %b %-12:c%?-12t% s")
+                                  (timeline . "  % s")
+                                  (todo . " %i %b %-12:c")
+                                  (tags . " %i %b %-12:c")
+                                  (search . " %i %b %-12:c")))
   (setq org-agenda-custom-commands
         '(("A" "Agenda and tasks"
            ((agenda "")
-            (todo "WAITING|TODO"
+            (todo "WAITING|TODO|NEXT"
                   )))
           ("D" "Day agenda and tasks"
            ((agenda "" ((org-agenda-span 1)))
-            (todo "WAITING|TODO"
+            (todo "WAITING|TODO|NEXT"
                   )))))
   (setq org-journal-dir "~/Dropbox/notes/journal/")
   (setq org-journal-date-format "%A, %d %B %Y")
@@ -617,6 +638,9 @@ you should place your code here."
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-link-abbrev-alist
         '(("concord-jira" . "https://contractlive.atlassian.net/browse/")))
+  (setq org-re-reveal-root "file:///home/alexvanacker/devenv/reveal.js/reveal.js-4.2.1/")
+  (setq org-re-reveal-revealjs-version "4")
+  (setq org-re-reveal-theme "moon")
   ;; Org clock
   (spacemacs/toggle-mode-line-org-clock-on)
   ;; Blogging - export
@@ -667,7 +691,9 @@ you should place your code here."
   ;; Python
   (setq flycheck-python-pycompile-executable "python3")
   ;; JS
-  (setq flycheck-eslint-rules-directories '("~/concord/git/concord-app-front/services/front/"))
+  (setq ember-completion-system 'helm)
+  ;; Workaround https://github.com/syl20bnr/spacemacs/issues/15089
+  (setq auto-mode-alist (delete '("/git-rebase-todo$" . helm-ls-git-rebase-todo-mode) auto-mode-alist))
   (org-gcal-fetch)
   )
 (defun dotspacemacs/emacs-custom-settings ()
@@ -681,14 +707,34 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(evil-want-Y-yank-to-eol nil)
- '(org-export-backends '(ascii html icalendar latex md odt org))
+ '(highlight-parentheses-colors '("#2aa198" "#b58900" "#268bd2" "#6c71c4" "#859900"))
+ '(hl-todo-keyword-faces
+   '(("TODO" . "#dc752f")
+     ("NEXT" . "#dc752f")
+     ("THEM" . "#2d9574")
+     ("PROG" . "#4f97d7")
+     ("OKAY" . "#4f97d7")
+     ("DONT" . "#f2241f")
+     ("FAIL" . "#f2241f")
+     ("DONE" . "#86dc2f")
+     ("NOTE" . "#b1951d")
+     ("KLUDGE" . "#b1951d")
+     ("HACK" . "#b1951d")
+     ("TEMP" . "#b1951d")
+     ("FIXME" . "#dc752f")
+     ("XXX+" . "#dc752f")
+     ("\\?\\?\\?+" . "#dc752f")))
+ '(org-agenda-files
+   '("/home/alexvanacker/Dropbox/notes/concord-api.org" "/home/alexvanacker/Dropbox/notes/1o1_Renald.org" "/home/alexvanacker/Dropbox/notes/2020-02-24T1053-watchman-cs-passover.org" "/home/alexvanacker/Dropbox/notes/2020-02-26T0846.org" "/home/alexvanacker/Dropbox/notes/2020-03-03T1556.org" "/home/alexvanacker/Dropbox/notes/2020-03-03T1657.org" "/home/alexvanacker/Dropbox/notes/2020-03-03T1831.org" "/home/alexvanacker/Dropbox/notes/2020-03-03T2153.org" "/home/alexvanacker/Dropbox/notes/2020-03-04T2246.org" "/home/alexvanacker/Dropbox/notes/2020-03-06T2222.org" "/home/alexvanacker/Dropbox/notes/2020-03-11T2218.org" "/home/alexvanacker/Dropbox/notes/2020-03-12T1013.org" "/home/alexvanacker/Dropbox/notes/2020-03-18T1315.org" "/home/alexvanacker/Dropbox/notes/2020-03-25T1137.org" "/home/alexvanacker/Dropbox/notes/2020-04-15T1429.org" "/home/alexvanacker/Dropbox/notes/2020-04-16T0849.org" "/home/alexvanacker/Dropbox/notes/2020-04-22T1347.org" "/home/alexvanacker/Dropbox/notes/2020-05-06T1533.org" "/home/alexvanacker/Dropbox/notes/2020-05-19T1134.org" "/home/alexvanacker/Dropbox/notes/2020-05-25T1011.org" "/home/alexvanacker/Dropbox/notes/2020-05-28T2125.org" "/home/alexvanacker/Dropbox/notes/2020-09-15T1658.org" "/home/alexvanacker/Dropbox/notes/2020-09-24T2338.org" "/home/alexvanacker/Dropbox/notes/2020-09-25T1708.org" "/home/alexvanacker/Dropbox/notes/2020-10-03T1519.org" "/home/alexvanacker/Dropbox/notes/20200226145210_new_relic_deployment_org.org" "/home/alexvanacker/Dropbox/notes/20201002233931_migration_cute_pdfbox.org" "/home/alexvanacker/Dropbox/notes/20201011215938-document_security_store.org" "/home/alexvanacker/Dropbox/notes/2021-03-18T2236.org" "/home/alexvanacker/Dropbox/notes/2021-04-01T1114.org" "/home/alexvanacker/Dropbox/notes/2021-07-05T1810.org" "/home/alexvanacker/Dropbox/notes/CPM-10369 Autorequest.org" "/home/alexvanacker/Dropbox/notes/CPM-11342 Corner cases.org" "/home/alexvanacker/Dropbox/notes/CPM-1160-just-eat-sso-duplicates.org" "/home/alexvanacker/Dropbox/notes/Dependency review.org" "/home/alexvanacker/Dropbox/notes/Epic-CPM-10370-signature-auto-reminder.org" "/home/alexvanacker/Dropbox/notes/Ernest.org" "/home/alexvanacker/Dropbox/notes/Mentoring Sandro Alcamo.org" "/home/alexvanacker/Dropbox/notes/Paris tennis.org" "/home/alexvanacker/Dropbox/notes/agreegator.org" "/home/alexvanacker/Dropbox/notes/bcm.org" "/home/alexvanacker/Dropbox/notes/beyond classics website.org" "/home/alexvanacker/Dropbox/notes/budget.org" "/home/alexvanacker/Dropbox/notes/clockreport.org" "/home/alexvanacker/Dropbox/notes/creation_source.org" "/home/alexvanacker/Dropbox/notes/dontstarvetogether.org" "/home/alexvanacker/Dropbox/notes/gcal.org" "/home/alexvanacker/Dropbox/notes/gtd.org" "/home/alexvanacker/Dropbox/notes/happypal.org" "/home/alexvanacker/Dropbox/notes/hiring.org" "/home/alexvanacker/Dropbox/notes/iff_sso_preparation.org" "/home/alexvanacker/Dropbox/notes/immutables.org" "/home/alexvanacker/Dropbox/notes/inbox.org" "/home/alexvanacker/Dropbox/notes/infra-ami-update-no-downtime.org" "/home/alexvanacker/Dropbox/notes/integrationtests.org" "/home/alexvanacker/Dropbox/notes/journal.org" "/home/alexvanacker/Dropbox/notes/justeat-email-migration.org" "/home/alexvanacker/Dropbox/notes/memory-leak.org" "/home/alexvanacker/Dropbox/notes/numerical.org" "/home/alexvanacker/Dropbox/notes/personal.org" "/home/alexvanacker/Dropbox/notes/phone.org" "/home/alexvanacker/Dropbox/notes/pricing-2020.org" "/home/alexvanacker/Dropbox/notes/signature-snapshots.org" "/home/alexvanacker/Dropbox/notes/signer-migration.org" "/home/alexvanacker/Dropbox/notes/signer_panel_epic.org" "/home/alexvanacker/Dropbox/notes/spring_data.org" "/home/alexvanacker/Dropbox/notes/spring_secu_oauth_upgrade.org" "/home/alexvanacker/Dropbox/notes/use_template_api.org"))
+ '(org-export-backends '(ascii html icalendar latex md odt org re-reveal))
  '(package-selected-packages
-   '(solarized-theme emacsql-sqlite3 helm-ls-git evil-collection imenu-list plantuml-mode treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil treemacs cfrs ht posframe symbol-overlay sphinx-doc pipenv org-superstar org-re-reveal org-brain magit-section emr list-utils editorconfig package-lint window-purpose ctable all-the-icons csv-mode ox-jira org-jira oauth2 spotify company-emacs-eclim eclim ox-gfm persist request-deferred deferred calfw org-gcal flycheck-rust flycheck-pos-tip flycheck insert-shebang fish-mode company-shell terraform-mode hcl-mode ansible-doc ansible strace-mode org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
+   '(code-review emojify seeing-is-believing rvm ruby-tools ruby-test-mode ruby-refactor ruby-hash-syntax rubocopfmt rubocop rspec-mode robe rbenv rake minitest chruby bundler inf-ruby helm-gtags godoctor go-tag go-rename go-impl go-guru go-gen-test go-fill-struct go-eldoc ggtags flycheck-golangci-lint counsel-gtags counsel swiper ivy company-go go-mode ember-yasnippets ember-mode lsp-ui lsp-python-ms lsp-pyright lsp-origami origami lsp-java dap-mode lsp-treemacs bui helm-lsp lsp-mode mvn meghanada groovy-mode groovy-imports pcache solarized-theme emacsql-sqlite3 helm-ls-git evil-collection imenu-list plantuml-mode treemacs-projectile treemacs-persp treemacs-magit treemacs-icons-dired treemacs-evil treemacs cfrs ht posframe symbol-overlay sphinx-doc pipenv org-superstar org-re-reveal org-brain magit-section emr list-utils editorconfig package-lint window-purpose ctable all-the-icons csv-mode ox-jira org-jira oauth2 spotify company-emacs-eclim eclim ox-gfm persist request-deferred deferred calfw org-gcal flycheck-rust flycheck-pos-tip flycheck insert-shebang fish-mode company-shell terraform-mode hcl-mode ansible-doc ansible strace-mode org-cliplink deft org-roam org-journal yasnippet-classic-snippets ox-reveal maven-test-mode apib-mode yasnippet-snippets gnu-elpa-keyring-update web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot adoc-mode markup-faces ox-asciidoc ag ghub closql emacsql-sqlite emacsql treepy forge yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode helm-pydoc cython-mode company-anaconda anaconda-mode pythonic mmm-mode markdown-toc gh-md yaml-mode dockerfile-mode docker tablist docker-tramp web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor js2-mode js-doc company-tern dash-functional tern coffee-mode restclient-helm ob-restclient ob-http company-restclient restclient know-your-http-well toml-mode racer pos-tip cargo markdown-mode rust-mode sql-indent smeargle orgit magit-gitflow magit-popup helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy evil-magit magit transient git-commit with-editor company-statistics company clojure-snippets auto-yasnippet ac-ispell auto-complete evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-ediff evil-args evil-anzu anzu evil undo-tree clj-refactor inflections edn spinner queue adaptive-wrap multiple-cursors paredit yasnippet peg cider-eval-sexp-fu cider sesman parseedn clojure-mode parseclj a ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smartparens restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-unimpaired evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-escape goto-chg eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))
+ '(pdf-view-midnight-colors '("#b2b2b2" . "#292b2e"))
  '(python-shell-interpreter "python3"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((((class color) (min-colors 89)) (:foreground "#839496" :background "#002b36")))))
 )
