@@ -1,5 +1,5 @@
 export DEVENV=$HOME/devenv
-export MAVEN_HOME=$DEVENV/apache-maven/apache-maven-3.6.1
+export MAVEN_HOME=$DEVENV/apache-maven-3.8.4
 export ECLIPSE_HOME=$DEVENV/eclipse/jee-oxygen/eclipse
 export REDIS_HOME=$DEVENV/redis/redis-4.0.2/
 export GRADLE_HOME=$DEVENV/gradle/gradle-4.3.1
@@ -12,5 +12,8 @@ export PACKER=$DEVENV/packer
 export ALLURE=$DEVENV/allure-2.9.0
 export GO_PATH=$DEVENV/go
 export GIT_FILTER_REPO=$HOME/git/git-filter-repo
+export LIQUIBASE=$DEVENV/liquibase
+export GEM_HOME=$HOME/gems
 
-export PATH=~/bin:$GIT_FILTER_REPO:$MAVEN_HOME/bin:$REDIS_HOME/bin:$GRADLE_HOME/bin:$TERRAFORM_HOME:$RUST:$EXERCISM:$LEIN:$PACKER:$ALLURE/bin:$GO_PATH/bin:$PATH
+export PATH=$GEM_HOME/bin:~/bin:$LIQUIBASE:$GIT_FILTER_REPO:$MAVEN_HOME/bin:$REDIS_HOME/bin:$GRADLE_HOME/bin:$TERRAFORM_HOME:$RUST:$EXERCISM:$LEIN:$PACKER:$ALLURE/bin:$GO_PATH/bin:$PATH
+. "$HOME/.cargo/env"
