@@ -90,7 +90,7 @@ fi
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git rust cargo command-time
+  git rust command-time
 )
 
 source $ZSH/oh-my-zsh.sh
