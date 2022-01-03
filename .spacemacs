@@ -613,6 +613,7 @@ you should place your code here."
              "* TODO [[%:link][%:description]] \n%?\n" :clock-keep t :jump-to-captured t))))
   ;; org-agenda
   (setq org-agenda-files (quote ("~/Dropbox/notes")))
+  (setq org-agenda-tag-filter-preset '("-personal"))
   (spacemacs/set-leader-keys "oc" (lambda () (interactive (find-file "~/Dropbox/notes/clockreport.org"))))
   (setq org-todo-keywords
         '((sequence "IDEA" "TODO" "NEXT" "WAITING(/!)" "|" "DONE")))
