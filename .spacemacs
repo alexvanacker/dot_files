@@ -153,7 +153,7 @@ It should only modify the values of Spacemacs settings."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https nil
+   dotspacemacs-elpa-https t
 
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
