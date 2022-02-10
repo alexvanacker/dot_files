@@ -80,7 +80,7 @@ This function should only modify configuration layer settings."
      (clojure :variables
               clojure-enable-linters 'clj-kondo)
      react
-     terraform
+     (terraform :variables terraform-backend 'lsp)
      (java :variables java-backend 'lsp)
      (plantuml :variables
                plantuml-jar-path "~/devenv/plantuml.jar"
