@@ -77,7 +77,8 @@ This function should only modify configuration layer settings."
                  js2-mode-show-strict-warnings nil)
      shell-scripts
      sql
-     clojure
+     (clojure :variables
+              clojure-enable-linters 'clj-kondo)
      react
      terraform
      (java :variables java-backend 'lsp)
