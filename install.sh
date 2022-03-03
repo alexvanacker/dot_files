@@ -33,7 +33,7 @@ sudo add-apt-repository ppa:kelleyk/emacs --yes
 sudo apt remove emacs
 
 sudo apt update
-sudo apt install -y curl vim emacs27 zsh gnupg openssh-server fonts-powerline
+sudo apt install -y curl vim emacs27 zsh gnupg openssh-server fonts-powerline stow
 
 # Install solarized dircolors
 if [[ ! -d ~/.dircolors ]];
@@ -49,6 +49,7 @@ then
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 	rm ~/.zshrc
 fi
+stow zsh
 
 # Install Doom
 echo "Installing Spacemacs..."
@@ -60,8 +61,10 @@ fi
 
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
-
-
+rm -rf "$HOME/.doom.d/"
+stow doom
+ln -s "$HOME/.emacs.d/bin/doom" "$HOME/.local/bin/doom"
+doom sync
 
 # Install Dropbox
 if [[ ! -d ~/.dropbox-dist ]];
@@ -72,13 +75,4 @@ then
 fi
 
 # Install Source Code Pro Font
-installSourceCodePro 
-
-# Symlinks existing files
-for f in `ls -A $INSTALLDIR -I .git -I install.sh -I ".*.swp"`
-do
-	echo "Installing $f"
-	ln -sv $INSTALLDIR/$f ~
-done
-
-
+installSourceCodePro
