@@ -82,6 +82,8 @@
 (setq org-refile-use-outline-path 'file)
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
+;; Open Magit by default when switching to project
+(setq projectile-switch-project-action 'projectile-vc)
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
