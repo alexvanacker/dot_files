@@ -50,7 +50,7 @@ then
 	rm ~/.zshrc
 fi
 
-# Install Spacemacs
+# Install Doom
 echo "Installing Spacemacs..."
 if [[ -d .emacs.d ]];
 then
@@ -58,10 +58,9 @@ then
 	mv .emacs .emacs.bak
 fi
 
-git clone https://github.com/syl20bnr/spacemacs -b develop ~/.emacs.d
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
 
-# Install custom spacemacs layers (TODO: move this to spacemacs somehow)
-git clone https://github.com/mhkc/google-calendar-layer ~/.emacs.d/private/google-calendar
 
 
 # Install Dropbox
