@@ -32,7 +32,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-vibrant)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -43,7 +43,7 @@
 (setq org-directory "~/Dropbox/notes/")
 
 ;; My org configuration
-
+(after! org
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
          "* TODO  %?\n  %i\n ")
@@ -80,7 +80,7 @@
                            (org-agenda-files :maxlevel . 9)))
 (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
 (setq org-refile-use-outline-path 'file)
-(setq org-refile-allow-creating-parent-nodes 'confirm)
+(setq org-refile-allow-creating-parent-nodes 'confirm))
 
 ;; Open Magit by default when switching to project
 (setq projectile-switch-project-action 'projectile-vc)
