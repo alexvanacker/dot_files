@@ -85,6 +85,11 @@
 ;; Open Magit by default when switching to project
 (setq projectile-switch-project-action 'projectile-vc)
 
+;; Plantuml
+(setq org-plantuml-jar-path (concat
+                             (getenv "DEVENV")
+                             "/plantuml.jar"))
+
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;
