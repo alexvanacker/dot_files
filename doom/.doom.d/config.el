@@ -40,7 +40,47 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Dropbox/notes/")
+
+;; My org configuration
+
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
+         "* TODO  %?\n  %i\n ")
+        ("i" "Idea" entry (file+headline "~/Dropbox/notes/gtd.org" "Tasks")
+         "* IDEA %?\n %i\n %a")
+        ("m" "Note (Meeting)" entry (file "~/Dropbox/notes/inbox.org")
+         "* %U Meeting - %?\n" :clock-in t :clock-keep t)
+        ("a" "Note (Action)" entry (file "~/Dropbox/notes/inbox.org")
+         "* %U %?\n" :clock-in t :clock-keep t)
+        ("L" "Link from protocol" entry (file "~/Dropbox/notes/inbox.org")
+         "* TODO [[%:link][%:description]] \n%?\n" :clock-keep t :jump-to-captured t)))
+;; org-agenda
+(setq org-agenda-files (quote ("~/Dropbox/notes")))
+(setq org-agenda-tag-filter-preset '("-personal"))
+(setq org-todo-keywords
+      '((sequence "IDEA" "TODO" "NEXT" "WAITING(/!)" "|" "DONE")))
+(setq org-log-into-drawer t)
+(setq org-clock-out-remove-zero-time-clocks t)
+(setq org-agenda-prefix-format '((agenda . " %i %b %-12:c%?-12t% s")
+                                 (timeline . "  % s")
+                                 (todo . " %i %b %-12:c")
+                                 (tags . " %i %b %-12:c")
+                                 (search . " %i %b %-12:c")))
+(setq org-agenda-custom-commands
+      '(("A" "Agenda and tasks"
+         ((agenda "")
+          (todo "WAITING|TODO|NEXT"
+                )))
+        ("D" "Day agenda and tasks"
+         ((agenda "" ((org-agenda-span 1)))
+          (todo "WAITING|TODO|NEXT"
+                )))))
+(setq org-refile-targets '((nil :maxlevel . 9)
+                           (org-agenda-files :maxlevel . 9)))
+(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+(setq org-refile-use-outline-path 'file)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
 
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
