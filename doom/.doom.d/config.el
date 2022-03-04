@@ -38,6 +38,12 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+
+;; GPG loading
+(setq auth-source-debug t)
+(setq auth-sources '("~/.authinfo" "~/secrets.el.gpg")
+      auth-source-cache-expiry nil) ;
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/notes/")
