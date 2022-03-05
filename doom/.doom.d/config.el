@@ -48,6 +48,14 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/notes/")
 
+;; Deft configuration
+(setq deft-directory "~/Dropbox/notes/")
+(setq deft-recursive t)
+(setq deft-default-extension "org")
+(setq deft-text-mode 'org-mode)
+(setq deft-use-filename-as-title nil)
+(setq deft-use-filter-string-for-filename t)
+
 ;; My org configuration
 (after! org
 (setq org-capture-templates
