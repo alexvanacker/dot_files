@@ -49,6 +49,11 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/notes/")
 
+;; Custom keybindings
+(map! :leader
+      :desc "Go to inbox.org"
+      :g "oi" (lambda () (interactive) (find-file "~/Dropbox/notes/inbox.org")))
+
 ;; Deft configuration
 (setq deft-directory "~/Dropbox/notes/")
 (setq deft-recursive t)
