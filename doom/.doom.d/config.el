@@ -87,6 +87,7 @@
                                  (todo . " %i %b %-12:c")
                                  (tags . " %i %b %-12:c")
                                  (search . " %i %b %-12:c")))
+(setq org-agenda-start-day nil)
 (setq org-agenda-custom-commands
       '(("A" "Agenda and tasks"
          ((agenda "")
