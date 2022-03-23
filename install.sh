@@ -52,7 +52,7 @@ fi
 stow zsh
 
 # Install Doom
-echo "Installing Spacemacs..."
+echo "Installing Emacs..."
 if [[ -d .emacs.d ]];
 then
 	mv .emacs.d .emacs.d.bak
