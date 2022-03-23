@@ -1,0 +1,13 @@
+#+TITLE: My dot files
+
+
+This project is meant for me to be able to find my tooling on any machine I setup.
+
+I use stow for handling symlinks.
+
+
+* Emacs stuff
+
+** Magit
+
+For having all the options in rebase (for example --exec), you need to set the proper transient level. See ~transient-set-level~ in [[https://magit.vc/manual/transient.html][the transient documentation.]]
