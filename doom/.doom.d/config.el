@@ -53,6 +53,9 @@
 (map! :leader
       :desc "Go to inbox.org"
       :g "oi" (lambda () (interactive) (find-file "~/Dropbox/notes/inbox.org")))
+(map! :leader
+      :desc "Go to clock report"
+      :g "oc" (lambda () (interactive (find-file "~/Dropbox/notes/clockreport.org"))))
 
 ;; Deft configuration
 (setq deft-directory "~/Dropbox/notes/")
