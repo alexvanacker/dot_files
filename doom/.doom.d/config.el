@@ -111,6 +111,9 @@
                              (getenv "DEVENV")
                              "/plantuml.jar"))
 
+;; Mermaid JS Supprot
+(setq ob-mermaid-cli-path "~/devenv/mermaid-cli/node_modules/.bin/mmdc")
+
 ;; Google calendar setup
 ;; Note: some loaded via secrets.el.gpg
 (setq org-gcal-fetch-file-alist
