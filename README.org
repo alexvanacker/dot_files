@@ -5,6 +5,10 @@ This project is meant for me to be able to find my tooling on any machine I setu
 
 I use stow for handling symlinks.
 
+* Installation
+
+~git clone~ this repository in your $HOME folder. This is needed for stow to work properly.
+Then run the install script.
 
 * Emacs stuff
 
