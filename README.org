@@ -12,6 +12,15 @@ Then run the install script.
 
 * Emacs stuff
 
+** GPG / Secrets
+To handle secrets and so on with GPG and Emacs, you need to create a ~secrets.el~ file in your home folder. It should have the following format:
+
+#+begin_src lisp
+; -*- epa-file-encrypt-to: ("alexvanacker@gmail.com") -*-
+
+(setq some_secret "some secret value")
+#+end_src
+
 ** Magit
 
 For having all the options in rebase (for example --exec), you need to set the proper transient level. See ~transient-set-level~ in [[https://magit.vc/manual/transient.html][the transient documentation.]]
