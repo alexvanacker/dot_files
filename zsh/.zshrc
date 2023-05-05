@@ -77,12 +77,6 @@ ZSH_CUSTOM=$HOME/.zsh_custom
 
 # Install command-time custom plugins
 
-export CUSTOM_COMMAND_TIME_PATH=$ZSH_CUSTOM/plugins/command-time
-if [[ ! -d $CUSTOM_COMMAND_TIME_PATH ]];
-then
-    echo "ZSH: Installing command-time plugin..."
-    git clone git@github.com:popstas/zsh-command-time.git $CUSTOM_COMMAND_TIME_PATH
-fi
 
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
@@ -90,7 +84,7 @@ fi
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git rust command-time
+  git rust
 )
 
 source $ZSH/oh-my-zsh.sh
