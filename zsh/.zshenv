@@ -1,5 +1,5 @@
 export DEVENV=$HOME/devenv
-export MAVEN_HOME=$DEVENV/apache-maven-3.8.4
+export MAVEN_HOME=$DEVENV/apache-maven-3.9.4
 export ECLIPSE_HOME=$DEVENV/eclipse/jee-oxygen/eclipse
 export REDIS_HOME=$DEVENV/redis/redis-4.0.2/
 export GRADLE_HOME=$DEVENV/gradle/gradle-4.3.1
