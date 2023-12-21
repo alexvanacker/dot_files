@@ -117,6 +117,11 @@
 ;; Mermaid JS Supprot
 (setq ob-mermaid-cli-path "~/devenv/mermaid-cli/node_modules/.bin/mmdc")
 
+;; Org-roam
+(setq org-roam-directory (file-truename "~/Dropbox/notes"))
+(setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+(org-roam-db-autosync-mode)
+
 ;; Google calendar setup
 ;; Note: some loaded via secrets.el.gpg
 ;;(setq org-gcal-fetch-file-alist
