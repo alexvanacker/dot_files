@@ -35,11 +35,12 @@ then
 	mv .emacs .emacs.bak
 fi
 
-sudo add-apt-repository ppa:kelleyk/emacs --yes
+
+sudo add-apt-repository ppa:ubuntuhandbook1/emacs --yes
 sudo apt remove -autoremove emacs emacs-commons
 
 sudo apt update
-sudo apt install -y curl vim emacs28 zsh gnupg openssh-server fonts-powerline stow
+sudo apt install -y curl vim emacs emacs-common zsh gnupg openssh-server fonts-powerline stow
 
 # Install solarized dircolors
 if [[ ! -d ~/.dircolors ]];
