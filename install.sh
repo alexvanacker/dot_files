@@ -74,9 +74,9 @@ then
 	mv .emacs .emacs.bak
 fi
 
-git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
-rm -rf "$HOME/.doom.d/"
+git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
+~/.config/emacs/doom install
+rm -rf "$HOME/.config/doom/"
 stow doom
 
 if [[ ! -f ~/secrets.el ]];
