@@ -25,6 +25,8 @@ fi
 #export GIT_FILTER_REPO=$HOME/git/git-filter-repo
 #
 #export PATH=~/bin:$GIT_FILTER_REPO:$MAVEN_HOME/bin:$REDIS_HOME/bin:$GRADLE_HOME/bin:$TERRAFORM_HOME:$RUST:$EXERCISM:$LEIN:$PACKER:$ALLURE/bin:$GO_PATH/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+
 
 # Use "config" to version dot files.
 alias config='/usr/bin/git --git-dir=$HOME/.myconf/ --work-tree=$HOME'
