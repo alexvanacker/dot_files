@@ -4,6 +4,11 @@
 INSTALLDIR=$PWD
 
 echo "Working from $INSTALLDIR"
+if [[ "$INSTALLDIR" != "$HOME/dot_files" ]]
+then
+	echo "You must run this from the dot_files folder."
+	exit 1
+fi
 
 
 function installSourceCodePro {
@@ -49,6 +54,7 @@ then
 fi
 
 
+
 # Install Oh My Zsh
 if [[ ! -d $HOME/.oh-my-zsh ]];
 then
@@ -56,6 +62,9 @@ then
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 stow zsh
+
+# Install Powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
 
 # Install Doom
 echo "Installing Emacs..."
@@ -70,6 +79,10 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 rm -rf "$HOME/.doom.d/"
 stow doom
 
+if [[ ! -f ~/secrets.el ]];
+then
+	echo "; -*- epa-file-encrypt-to: ("alexvanacker@gmail.com") -*-" > "$HOME/secrets.el"
+fi
 
 if [[ ! -d "$HOME/.local/bin/" ]];
 then
@@ -77,7 +90,7 @@ then
 fi
 
 ln -s "$HOME/.emacs.d/bin/doom" "$HOME/.local/bin/doom"
-doom sync
+$HOME/.emacs.d/bin/doom sync
 
 # Install Dropbox
 if [[ ! -d ~/.dropbox-dist ]];
