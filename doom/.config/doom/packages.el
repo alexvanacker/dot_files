@@ -52,6 +52,4 @@
 ;
 (package! ob-mermaid)
 (package! nvm)
-; Temporary workaround to https://github.com/doomemacs/doomemacs/issues/8421
-(package! ghub
- :pin "12d1472579075135327278b843e23f055f659b3c")
+(package! ghub)
