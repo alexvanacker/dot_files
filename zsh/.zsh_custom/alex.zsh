@@ -23,6 +23,13 @@ alias grsprint="gfa && git rebase -i origin/sprint"
 ### RUST
 alias cargodt="RUST_BACKTRACE=1 cargo test"
 
+## Concord
+alias mvnToken='export CODEARTIFACT_REPOSITORY=concordnow &&
+  export CODEARTIFACT_DOMAIN_NAME=concordnow &&
+  export CODEARTIFACT_DOMAIN_OWNER=718374936700 &&
+  export CODEARTIFACT_REGION=eu-west-1 &&
+  export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain concordnow --domain-owner 718374936700 --query authorizationToken --output text --region eu-west-1)'
+
 function grho() {
     [[ "$#" != 1 ]] && local b="$(git_current_branch)"
     gfa

@@ -40,10 +40,9 @@
 
 
 ;; GPG loading
-(load! "~/secrets.el")
+;; (load! "~/secrets.el")
 (setq auth-source-debug t)
-(setq auth-sources '("~/.authinfo")
-      auth-source-cache-expiry nil)
+(setq auth-sources '("~/.authinfo"))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -129,6 +128,10 @@
 ;; Issue with org-indent-timer see https://github.com/seagle0128/.emacs.d/issues/129
 (setq org-gcal-remove-api-cancelled-events t)
 
+
+;; Python ruff
+(require 'flymake-ruff)
+(add-hook 'python-mode-hook #'flymake-ruff-load)
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;

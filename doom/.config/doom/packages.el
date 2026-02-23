@@ -53,3 +53,8 @@
 (package! ob-mermaid)
 (package! nvm)
 (package! ghub)
+; Virtual terminal - for claude
+(package! eat)
+(package! claude-code
+  :recipe (:host github :repo "stevemolitor/claude-code.el"))
+(package! flymake-ruff)
